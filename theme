@@ -1,0 +1,74 @@
+title-text     : ""
+terminal-left  : "0"
+terminal-top   : "0"
+terminal-width : "100%"
+terminal-height: "100%"
+terminal-border: "0"
+desktop-image  : "background.png"
+
++ boot_menu {
+    left                       = "15%"
+    top                        = "20%"
+    width                      = "70%"
+    height                     = "60%"
+    item_font                  = "@font@"
+    item_color                 = "@themecolor@"
+    selected_item_color        = "#ffffff"
+    item_height                = "48"
+    item_spacing               = "10"
+    icon_width                 = "@iconsize@"
+    icon_height                = "@iconsize@"
+    item_icon_space            = "20"
+    selected_item_pixmap_style = "selected_*.png"
+}
+
++ label {
+    left  = "0"
+    top   = "100"
+    width = "100%"
+    align = "center"
+    color = "@themecolor@"
+    font  = "@font@"
+    text  = "ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM"
+}
+
++ label {
+    left  = "0"
+    top   = "140"
+    width = "100%"
+    align = "center"
+    color = "@themecolor@"
+    font  = "@font@"
+    text  = "COPYRIGHT 2075-2077 ROBCO INDUSTRIES"
+}
+
++ label {
+    left  = "0"
+    top   = "180"
+    width = "100%"
+    align = "center"
+    color = "@themecolor@"
+    font  = "@font@"
+    text  = "-Server 1-"
+}
+
++ label {
+    id    = "__timeout__"
+    left  = "0"
+    top   = "98%-120"
+    width = "100%"
+    align = "center"
+    color = "@themecolor@"
+    font  = "@font@"
+    text  = "Booting selected entry in %02ds..."
+}
+
++ label {
+    left  = "0"
+    top   = "98%-70"
+    width = "100%"
+    align = "center"
+    color = "@themecolor@"
+    font  = "@font@"
+    text  = "↑↓: select, 'c': command-line, 'e': edit"
+}
