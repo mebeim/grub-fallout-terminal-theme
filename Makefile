@@ -1,25 +1,17 @@
-# Build directory:
+# Build variables.
 BUILD_DIR   := build
-# Theme directory name (will be created inside install dir):
 THEME_DIR   := grub-fallout-terminal-theme
-# Installation directory (created if not already existing):
 INSTALL_DIR := /boot/grub/themes
-# Location of grub user configuration file:
 GRUB_CONFIG := /etc/default/grub
-# Path to grub.cfg:
 GRUB_CFG    := /boot/grub/grub.cfg
 
-# Global font size:
+# Customizable properties.
+BACKGROUND_SIZE   := 1920x1080
 FONT_SIZE         := 40
-# Size of icons near boot entries:
 ICON_SIZE         := 32
-# Main theme color, used for basically everything (MUST be 6-digit hex):
 THEME_COLOR       := 25d46c
-# Background color, used behind scanlines of the terminal (any valid CSS color, does not care about alpha):
 BACKGROUND_COLOR  := black
-# Text color of selected boot menu entry (MUST be 6-digit hex or valid HTML color name):
 SELECTED_FG_COLOR := white
-# Background color of selected boot menu entry (any valid CSS color, derived from theme color by default):
 SELECTED_BG_COLOR := $(THEME_COLOR)40
 
 # Target vars.
