@@ -10,18 +10,20 @@ GRUB_CONFIG := /etc/default/grub
 GRUB_CFG    := /boot/grub/grub.cfg
 
 # Global font size:
-font_size       := 40
+FONT_SIZE        := 40
 # Size of icons near boot entries:
-icon_size       := 32
-# Main theme color (MUST be 6-digit hex):
-theme_color     := 66d879
+ICON_SIZE        := 32
+# Main theme color, used for basically everything (MUST be 6-digit hex):
+THEME_COLOR      := 25d46c
+# Background color, used behind scanlines of the terminal (any valid CSS color, does not care about alpha):
+BACKGROUND_COLOR := black
 # BG color of selected entry (any valid CSS color, derived from theme color by default):
-selection_color := $(theme_color)40
+SELECTION_COLOR  := $(THEME_COLOR)40
 
 # Target vars.
 bg    := $(BUILD_DIR)/background.png
 sel   := $(BUILD_DIR)/selected_c.png
-font  := $(BUILD_DIR)/fixedsys$(font_size).pf2
+font  := $(BUILD_DIR)/fixedsys$(FONT_SIZE).pf2
 icons := $(patsubst icons/%.xcf, $(BUILD_DIR)/icons/%.png, $(wildcard icons/*.xcf))
 theme := $(BUILD_DIR)/theme
 
@@ -36,24 +38,24 @@ $(BUILD_DIR)/icons: | $(BUILD_DIR)
 	mkdir -p $@
 
 $(bg): background.xcf | $(BUILD_DIR)
-	xcf2png $< | convert - -strip $@
+	xcf2png $< | convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white png32:- | convert - -background $(BACKGROUND_COLOR) -alpha remove -strip png32:$@
 
 $(sel): | $(BUILD_DIR)
-	convert 'xc:#$(selection_color)' -strip png32:$@
+	convert 'xc:#$(SELECTION_COLOR)' -strip png32:$@
 
 $(font): fixedsys.ttf | $(BUILD_DIR)
 	rm -rf $(BUILD_DIR)/*.pf2
-	grub-mkfont -s $(font_size) -o $@ $<
+	grub-mkfont -s $(FONT_SIZE) -o $@ $<
 
 $(BUILD_DIR)/icons/%.png: icons/%.xcf | $(BUILD_DIR)/icons
-	xcf2png $< | convert - -fuzz 100% -fill '#$(theme_color)' -opaque white -strip png32:$@
-# TODO: resize to $(icon_size) to save space?
+	xcf2png $< | convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white -strip png32:$@
+# TODO: resize to $(ICON_SIZE) to save space?
 
 $(theme): theme | $(BUILD_DIR)
 	cp $< $@
-	sed -i 's/@font@/fixedsys$(font_size).pf2/' $@
-	sed -i 's/@iconsize@/$(icon_size)/' $@
-	sed -i 's/@themecolor@/#$(theme_color)/' $@
+	sed -i 's/@font@/fixedsys$(FONT_SIZE).pf2/' $@
+	sed -i 's/@iconsize@/$(ICON_SIZE)/' $@
+	sed -i 's/@themecolor@/#$(THEME_COLOR)/' $@
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -77,7 +79,7 @@ uninstall: check
 	rm -rf $(INSTALL_DIR)/$(THEME_DIR)
 	sed -i '\|GRUB_THEME=$(INSTALL_DIR)/$(THEME_DIR)/theme|d' $(GRUB_CONFIG)
 	grub-mkconfig -o $(GRUB_CFG)
-	@grep -q 'GRUB_TERMINAL' $(GRUB_CONFIG) && echo 'NOTE: Uncomment GRUB_TERMINAL=... in $(GRUB_CONFIG) and re-run this if you wish to use the terminal.' >&2 || true
+	@grep -q 'GRUB_TERMINAL' $(GRUB_CONFIG) && echo 'NOTE: Uncomment GRUB_TERMINAL=... in $(GRUB_CONFIG) and re-run this if you wish to disable the graphical terminal.' >&2 || true
 
 preview:
 	sleep 5 && kill -9 `pidof grub-emu` &
