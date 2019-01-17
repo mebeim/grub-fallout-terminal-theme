@@ -66,7 +66,7 @@ check:
 	[ -f $(GRUB_CONFIG) ] && [ -f $(GRUB_CFG) ]
 
 install: check all
-	[ -d $(INSTALL_DIR)/$(THEME_DIR) ] && rm -rf $(INSTALL_DIR)/$(THEME_DIR)
+	[ -d $(INSTALL_DIR)/$(THEME_DIR) ] && rm -rf $(INSTALL_DIR)/$(THEME_DIR) || true
 	mkdir -p $(INSTALL_DIR)
 	cp -r $(BUILD_DIR) $(INSTALL_DIR)/$(THEME_DIR)
 	sed -i '/GRUB_TERMINAL\s*=/ s/^#*/#/' $(GRUB_CONFIG)
