@@ -29,7 +29,7 @@ font  := $(BUILD_DIR)/fixedsys$(FONT_SIZE).pf2
 icons := $(patsubst icons/%.xcf, $(BUILD_DIR)/icons/%.png, $(wildcard icons/*.xcf))
 theme := $(BUILD_DIR)/theme
 
-.PHONY: all clean install uninstall preview
+.PHONY: all clean check install uninstall preview
 
 all: $(bg) $(sel) $(font) $(icons) $(theme)
 
@@ -50,8 +50,7 @@ $(font): fixedsys.ttf | $(BUILD_DIR)
 	grub-mkfont -s $(FONT_SIZE) -o $@ $<
 
 $(BUILD_DIR)/icons/%.png: icons/%.xcf | $(BUILD_DIR)/icons
-	xcf2png $< | convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white -strip png32:$@
-# TODO: resize to $(ICON_SIZE) to save space?
+	xcf2png $< | convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white -resize '$(ICON_SIZE)x$(ICON_SIZE)' -strip png32:$@
 
 $(theme): theme | $(BUILD_DIR)
 	cp $< $@
@@ -75,6 +74,7 @@ install: check all
 	mkdir -p $(INSTALL_DIR)
 	cp -r $(BUILD_DIR) $(INSTALL_DIR)/$(THEME_DIR)
 	sed -i '/GRUB_TERMINAL\s*=/ s/^#*/#/' $(GRUB_CONFIG)
+	sed -i '\|GRUB_THEME=$(INSTALL_DIR)/$(THEME_DIR)/theme|d' $(GRUB_CONFIG)
 	echo 'GRUB_THEME=$(INSTALL_DIR)/$(THEME_DIR)/theme' >> $(GRUB_CONFIG)
 	grub-mkconfig -o $(GRUB_CFG)
 
