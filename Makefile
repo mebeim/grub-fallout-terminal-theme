@@ -10,15 +10,17 @@ GRUB_CONFIG := /etc/default/grub
 GRUB_CFG    := /boot/grub/grub.cfg
 
 # Global font size:
-FONT_SIZE        := 40
+FONT_SIZE         := 40
 # Size of icons near boot entries:
-ICON_SIZE        := 32
+ICON_SIZE         := 32
 # Main theme color, used for basically everything (MUST be 6-digit hex):
-THEME_COLOR      := 25d46c
+THEME_COLOR       := 25d46c
 # Background color, used behind scanlines of the terminal (any valid CSS color, does not care about alpha):
-BACKGROUND_COLOR := black
-# BG color of selected entry (any valid CSS color, derived from theme color by default):
-SELECTION_COLOR  := $(THEME_COLOR)40
+BACKGROUND_COLOR  := black
+# Text color of selected boot menu entry (MUST be 6-digit hex or valid HTML color name):
+SELECTED_FG_COLOR := white
+# Background color of selected boot menu entry (any valid CSS color, derived from theme color by default):
+SELECTED_BG_COLOR := $(THEME_COLOR)40
 
 # Target vars.
 bg    := $(BUILD_DIR)/background.png
@@ -41,7 +43,7 @@ $(bg): background.xcf | $(BUILD_DIR)
 	xcf2png $< | convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white png32:- | convert - -background $(BACKGROUND_COLOR) -alpha remove -strip png32:$@
 
 $(sel): | $(BUILD_DIR)
-	convert 'xc:#$(SELECTION_COLOR)' -strip png32:$@
+	convert 'xc:#$(SELECTED_BG_COLOR)' -strip png32:$@
 
 $(font): fixedsys.ttf | $(BUILD_DIR)
 	rm -rf $(BUILD_DIR)/*.pf2
@@ -56,6 +58,7 @@ $(theme): theme | $(BUILD_DIR)
 	sed -i 's/@font@/fixedsys$(FONT_SIZE).pf2/' $@
 	sed -i 's/@iconsize@/$(ICON_SIZE)/' $@
 	sed -i 's/@themecolor@/#$(THEME_COLOR)/' $@
+	sed -i 's/@selectedfgcolor@/$(SELECTED_FG_COLOR)/' $@
 
 clean:
 	rm -rf $(BUILD_DIR)
