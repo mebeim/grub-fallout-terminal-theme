@@ -14,6 +14,10 @@ BACKGROUND_COLOR  := black
 SELECTED_FG_COLOR := white
 SELECTED_BG_COLOR := $(THEME_COLOR)40
 
+# Helper vars.
+bg_w := $(firstword $(subst x, ,$(BACKGROUND_SIZE)))
+bg_w := $(firstword $(subst X, ,$(bg_w)))
+
 # Target vars.
 bg    := $(BUILD_DIR)/background.png
 sel   := $(BUILD_DIR)/selected_c.png
@@ -31,8 +35,14 @@ $(BUILD_DIR):
 $(BUILD_DIR)/icons: | $(BUILD_DIR)
 	mkdir -p $@
 
-$(bg): background.xcf | $(BUILD_DIR)
-	xcf2png $< | convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white png32:- | convert - -background $(BACKGROUND_COLOR) -alpha remove -strip png32:$@
+$(bg): scanline.xcf vaultboy.xcf | $(BUILD_DIR)
+	xcf2png scanline.xcf |\
+		convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white \
+		-background '$(BACKGROUND_COLOR)' -alpha remove - |\
+		convert -size '$(BACKGROUND_SIZE)' tile:- -strip $@
+	xcf2png vaultboy.xcf |\
+		convert - -resize $(bg_w) -scale 25% -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white - |\
+		convert $@ - -gravity SouthEast -geometry +40+40 -composite -strip png32:$@
 
 $(sel): | $(BUILD_DIR)
 	convert 'xc:#$(SELECTED_BG_COLOR)' -strip png32:$@
