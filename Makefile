@@ -7,8 +7,8 @@ GRUB_CFG    := /boot/grub/grub.cfg
 
 # Customizable properties.
 BACKGROUND_SIZE   := 1920x1080
-FONT_SIZE         := 40
-ICON_SIZE         := 32
+FONT_SIZE         := 20
+ICON_SIZE         := 24
 THEME_COLOR       := 25d46c
 BACKGROUND_COLOR  := black
 SELECTED_FG_COLOR := white
