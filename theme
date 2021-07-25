@@ -8,7 +8,7 @@ desktop-image  : "background.png"
 
 + boot_menu {
     left                       = "15%"
-    top                        = "20%"
+    top                        = "35%"
     width                      = "70%"
     height                     = "60%"
     item_font                  = "@font@"
@@ -29,7 +29,7 @@ desktop-image  : "background.png"
     align = "center"
     color = "@themecolor@"
     font  = "@font@"
-    text  = "ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM"
+    text  = "UNSC HIGH COMMAND OPERATING SYSTEM"
 }
 
 + label {
@@ -39,7 +39,7 @@ desktop-image  : "background.png"
     align = "center"
     color = "@themecolor@"
     font  = "@font@"
-    text  = "COPYRIGHT 2075-2077 ROBCO INDUSTRIES"
+    text  = "REMEMBER REACH 2525-2552"
 }
 
 + label {
@@ -60,7 +60,7 @@ desktop-image  : "background.png"
     align = "center"
     color = "@themecolor@"
     font  = "@font@"
-    text  = "Booting selected entry in %02ds..."
+    text  = "Booting in %01d seconds"
 }
 
 + label {

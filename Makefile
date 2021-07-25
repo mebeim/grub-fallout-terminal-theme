@@ -1,15 +1,15 @@
 # Build variables.
 BUILD_DIR   := build
-THEME_DIR   := grub-fallout-terminal-theme
+THEME_DIR   := halo-terminal
 INSTALL_DIR := /boot/grub/themes
 GRUB_CONFIG := /etc/default/grub
 GRUB_CFG    := /boot/grub/grub.cfg
 
 # Customizable properties.
 BACKGROUND_SIZE   := 1920x1080
-FONT_SIZE         := 20
-ICON_SIZE         := 24
-THEME_COLOR       := 25d46c
+FONT_SIZE         := 32
+ICON_SIZE         := 48
+THEME_COLOR       := 53ff00
 BACKGROUND_COLOR  := black
 SELECTED_FG_COLOR := white
 SELECTED_BG_COLOR := $(THEME_COLOR)40
@@ -23,7 +23,7 @@ bg    := $(BUILD_DIR)/background.png
 sel   := $(BUILD_DIR)/selected_c.png
 font  := $(BUILD_DIR)/fixedsys$(FONT_SIZE).pf2
 icons := $(patsubst icons/%.xcf, $(BUILD_DIR)/icons/%.png, $(wildcard icons/*.xcf))
-theme := $(BUILD_DIR)/theme
+theme := $(BUILD_DIR)/theme.txt
 
 .PHONY: all clean check install uninstall preview
 
@@ -35,13 +35,13 @@ $(BUILD_DIR):
 $(BUILD_DIR)/icons: | $(BUILD_DIR)
 	mkdir -p $@
 
-$(bg): scanline.xcf vaultboy.xcf | $(BUILD_DIR)
+$(bg): scanline.xcf halo.xcf | $(BUILD_DIR)
 	xcf2png scanline.xcf |\
-		convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white \
+		convert - -alpha deactivate -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white -alpha activate \
 		-background '$(BACKGROUND_COLOR)' -alpha remove - |\
 		convert -size '$(BACKGROUND_SIZE)' tile:- -strip $@
-	xcf2png vaultboy.xcf |\
-		convert - -resize $(bg_w) -scale 25% -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white - |\
+	xcf2png halo.xcf |\
+		convert - -resize $(bg_w) -scale 25% -alpha deactivate -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white -alpha activate - |\
 		convert $@ - -gravity SouthEast -geometry +40+40 -composite -strip png32:$@
 
 $(sel): | $(BUILD_DIR)
@@ -52,7 +52,7 @@ $(font): fixedsys.ttf | $(BUILD_DIR)
 	grub-mkfont -s $(FONT_SIZE) -o $@ $<
 
 $(BUILD_DIR)/icons/%.png: icons/%.xcf | $(BUILD_DIR)/icons
-	xcf2png $< | convert - -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white -resize '$(ICON_SIZE)x$(ICON_SIZE)' -strip png32:$@
+	xcf2png $< | convert - -alpha deactivate -fuzz 100% -fill '#$(THEME_COLOR)' -opaque white -alpha activate -resize '$(ICON_SIZE)x$(ICON_SIZE)' -strip png32:$@
 
 $(theme): theme | $(BUILD_DIR)
 	cp $< $@
